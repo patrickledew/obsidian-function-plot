@@ -27,6 +27,7 @@
 	},
 	"dependencies": {
 		"chalk": "^4.1.2",
+		"dotenv": "^16.0.0",
 		"esbuild-sass-plugin": "^2.2.3",
 		"function-plot": "^1.22.8",
 		"path": "^0.12.7",
