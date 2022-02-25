@@ -36,7 +36,7 @@ exp(x)*sin(1/x)
 
 ```
 ~~~
-Which yields this graph of $e^x \sin\left(\frac{1}{x}\right)$:
+Which yields this graph of e^x * sin(x):
 
 ![](example1.png)
 
