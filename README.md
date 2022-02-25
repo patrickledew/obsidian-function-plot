@@ -1,72 +1,48 @@
-## Obsidian Sample Plugin
+# Obsidian Function Plotter
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+## Description
+A plugin for [Obsidian](https://obsidian.md/) which allows for easy and fast plotting of functions within an Obsidian document. Uses the [function-plot](https://www.npmjs.com/package/function-plot) package to render plots.
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+## Installing and Using
+Install the plugin by downloading the latest version from the releases tab, and extracting into your Obsidian plugins folder (`[vault dir]/.obsidian/plugins/`)
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+You can include a function plot in one of your notes by using code fences (` ``` `) using the 'plot' language, i.e.
+~~~
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Changes the default font color to red using `styles.css`.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+```plot
 
-### First time developing plugins?
+```
+~~~
 
-Quick starting guide for new plugin devs:
+Use the options prefix (default `%`, but can be changed to another symbol) to specify options for the graph.
 
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+The currently supported options are:
+- `%xrange [xmin, xmax]`: Sets the range of x-values to display.
+- `%yrange [ymin, ymax]`: Sets the range of y-values to display.
+- `%grid`: If provided, will display a background grid in the plot.
 
-### Releasing new releases
+On subsequent lines, you can add in any functions you would like to plot. 
+Any non-empty line that is not prefixed with a `%` will be treated as a function. 
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+e.g.
+~~~
+```plot
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+%xrange [-1, 1]
+%yrange [-2, 2]
+%grid
 
-### Adding your plugin to the community plugin list
+exp(x)*sin(1/x)
 
-- Check https://github.com/obsidianmd/obsidian-releases/blob/master/plugin-review.md
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+```
+~~~
+Which yields this graph of $e^x \sin\left(\frac{1}{x}\right)$:
 
-### How to use
+![](example1.png)
 
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `npm run dev` to start compilation in watch mode.
+These lines are passed directly to [function-plot](https://www.npmjs.com/package/function-plot), which [uses the 'built-in-math-eval' package under the hood](https://github.com/mauriciopoppe/function-plot/issues/184#issuecomment-1041964296). Make sure your function is able to be parsed by this package.
 
-### Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-### Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
-
-
-### API Documentation
-
-See https://github.com/obsidianmd/obsidian-api
+Some minor annoyances you might encounter are:
+- Trying to use a constant like 'e' or 'pi' and them not being recognized as constants. Instead, use their decimal values or exp(x) for e^x
+- Cryptic error messages when there is an error parsing the function. [function-plot](https://www.npmjs.com/package/function-plot) does not give very descriptive errors, so it can be hard to find out what went wrong.
+- Using a variable other than x and having it throw an error. Unfortunately, the only supported variable is x, so expressions involving other commonly used variables (t, r, etc.) are not supported and you will have to rewrite them using x. 

@@ -1,0 +1,35 @@
+.ofp-function-plot-error {
+	color: rgb(255, 139, 139);
+	background-color: rgba(0, 0, 0, 0.733);
+	padding: 5px;
+	border-radius: 5px;
+}
+
+.ofp-function-plot-warning {
+	color: rgb(255, 238, 139);
+	background-color: rgba(0, 0, 0, 0.733);
+	padding: 5px;
+	border-radius: 5px;
+}
+
+.theme-dark .ofp-function-plot-view .function-plot {
+	background-color: rgba(0, 0, 0, 0.11);
+	border-radius: 20px;
+	.x.origin,
+	.y.origin {
+		stroke: #fffa;
+	}
+
+	.title {
+		fill: #fffa;
+		font-family: var(--default-font);
+		margin-bottom: 3em;
+	}
+
+	.x.axis,
+	.y.axis {
+		.tick line {
+			stroke: #fffa;
+		}
+	}
+}
